@@ -92,11 +92,11 @@ button,select,input{font:inherit}.shell{max-width:1280px;margin:auto;padding:0 2
   </section>
 
   <section class="view" id="subjects">
-    <div class="section-head"><div><div class="eyebrow" style="color:var(--blue)">Analiza ocen</div><h2>Przedmioty na przestrzeni lat</h2></div><p>Wybierz przedmiot, typ szkoły, profil i poziom klasy. Wykres pokazuje średnią oraz pełny rozkład ocen.</p></div>
+    <div class="section-head"><div><div class="eyebrow" style="color:var(--blue)">Analiza ocen</div><h2>Przedmioty na przestrzeni lat</h2></div><p>Wybierz najpierw typ szkoły, potem profil i przedmiot, a na końcu poziom klasy. Wykres pokazuje średnią oraz pełny rozkład ocen.</p></div>
     <div class="filters">
-      <div class="control wide"><label>Przedmiot</label><select id="subjectSelect"></select></div>
       <div class="control"><label>Typ szkoły</label><select id="subjectEducation"></select></div>
       <div class="control"><label>Profil</label><select id="subjectProfile"></select></div>
+      <div class="control wide"><label>Przedmiot</label><select id="subjectSelect"></select></div>
       <div class="control"><label>Poziom klasy</label><select id="subjectLevel"><option value="">Wszystkie</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
       <div class="control"><label>Akcja</label><button class="copy-link reset-filters" type="button" data-reset="subjects">Reset filtrów</button></div>
     </div>
@@ -248,14 +248,23 @@ function setView(view,{scroll=true,write=true}={}){
 }
 function writeUrlState(){
  const view=activeView(),params=new URLSearchParams();params.set("view",view);
- const controlsByView={subjects:["subjectSelect","subjectEducation","subjectProfile","subjectLevel"],cohorts:["cohortSelect"],attendance:["attendanceCohortSelect"],departures:["departureStatus","departureSchool"]};
+ const controlsByView={subjects:["subjectEducation","subjectProfile","subjectSelect","subjectLevel"],cohorts:["cohortSelect"],attendance:["attendanceCohortSelect"],departures:["departureStatus","departureSchool"]};
  const isDefault=(id,el)=>id==="subjectSelect"?el.value===String(defaultSubjectIndex):id==="departureStatus"?el.value==="Skreślony":id==="cohortSelect"||id==="attendanceCohortSelect"?el.selectedIndex===0:!el.value;
  (controlsByView[view]||[]).forEach(id=>{const el=document.getElementById(id);if(el&&el.value&&!isDefault(id,el))params.set(id,el.value);});
  history.replaceState(null,"",`${location.pathname}?${params.toString()}`);
 }
 function applyUrlState(){
  const params=new URLSearchParams(location.search);
- const stateControlIds=["subjectSelect","subjectEducation","subjectProfile","subjectLevel","cohortSelect","attendanceCohortSelect","departureStatus","departureSchool"];
+ updateSubjectControls({preserveSubject:false,preserveProfile:false,preserveLevel:false});
+ const subjectEducation=params.get("subjectEducation"),subjectProfile=params.get("subjectProfile"),subject=params.get("subjectSelect"),subjectLevel=params.get("subjectLevel");
+ if(subjectEducation&&[...subjectEducationEl.options].some(o=>o.value===subjectEducation))subjectEducationEl.value=subjectEducation;
+ updateSubjectControls({preserveSubject:false,preserveProfile:false,preserveLevel:false});
+ if(subjectProfile&&[...subjectProfileEl.options].some(o=>o.value===subjectProfile))subjectProfileEl.value=subjectProfile;
+ updateSubjectControls({preserveSubject:false,preserveProfile:true,preserveLevel:false});
+ if(subject&&[...subjectSelect.options].some(o=>o.value===subject))subjectSelect.value=subject;
+ updateSubjectControls({preserveSubject:true,preserveProfile:true,preserveLevel:false});
+ if(subjectLevel&&[...subjectLevelEl.options].some(o=>o.value===subjectLevel))subjectLevelEl.value=subjectLevel;
+ const stateControlIds=["cohortSelect","attendanceCohortSelect","departureStatus","departureSchool"];
  stateControlIds.forEach(id=>{const el=document.getElementById(id),value=params.get(id);if(el&&value&&[...el.options].some(o=>o.value===value))el.value=value;});
  setView(params.get("view")||"overview",{scroll:false,write:false});
 }
@@ -312,17 +321,43 @@ function renderOverview(){
  document.getElementById("nonPromotionSchoolTable").innerHTML=tableHtml(["Typ szkoły",...schoolYears],D.promotionBySchool.map(r=>[r[0],`${r[1]} z ${r[2]} · ${pl(r[3])}%`,`${r[4]} z ${r[5]} · ${pl(r[6])}%`,`${r[7]} z ${r[8]} · ${pl(r[9])}%`]));
 }
 
-selectOptions("subjectEducation",D.educationValues.map(educationLabel));
-document.getElementById("subjectProfile").innerHTML=`<option value="">Wszystkie</option>`+D.profileValues.map(v=>`<option value="${esc(v)}">${esc(profileLabel(v))}</option>`).join("");
 const subjectSelect=document.getElementById("subjectSelect");
-subjectSelect.innerHTML=D.subjects.map((s,i)=>`<option value="${i}" ${s[2]==="matematyka"?"selected":""}>${esc(s[0])} · ${esc(s[1])}</option>`).join("");
-// Map human labels back to raw values.
-document.getElementById("subjectEducation").innerHTML=`<option value="">Wszystkie</option>`+D.educationValues.map(v=>`<option value="${v}">${educationLabel(v)}</option>`).join("");
+const subjectEducationEl=document.getElementById("subjectEducation");
+const subjectProfileEl=document.getElementById("subjectProfile");
+const subjectLevelEl=document.getElementById("subjectLevel");
+subjectEducationEl.innerHTML=`<option value="">Wszystkie</option>`+D.educationValues.map(v=>`<option value="${v}">${educationLabel(v)}</option>`).join("");
+function availableSubjectGrades({education="",profile="",subject="",level=""}={}){
+ return D.grades.filter(r=>(!education||r[8]===education)&&(!profile||r[2]===profile)&&(!subject||String(r[4])===String(subject))&&(!level||String(r[3])===String(level)));
+}
+function setSelectOptions(el,options,allLabel="Wszystkie",preferred=""){
+ const previous=preferred!==undefined&&preferred!==null?String(preferred):String(el.value||"");
+ el.innerHTML=`<option value="">${allLabel}</option>`+options.map(([value,label])=>`<option value="${esc(value)}">${esc(label)}</option>`).join("");
+ if(previous&&[...el.options].some(option=>option.value===previous))el.value=previous;
+}
+function updateSubjectControls({preserveSubject=true,preserveProfile=true,preserveLevel=true}={}){
+ const education=subjectEducationEl.value;
+ const profileBefore=preserveProfile?subjectProfileEl.value:"";
+ const subjectBefore=preserveSubject?subjectSelect.value:String(defaultSubjectIndex);
+ const levelBefore=preserveLevel?subjectLevelEl.value:"";
+ const profileOptions=[...new Set(availableSubjectGrades({education}).map(r=>r[2]))].sort((a,b)=>profileLabel(a).localeCompare(profileLabel(b),"pl")).map(v=>[v,profileLabel(v)]);
+ setSelectOptions(subjectProfileEl,profileOptions,"Wszystkie",profileBefore);
+ const profile=subjectProfileEl.value;
+ const subjectIds=[...new Set(availableSubjectGrades({education,profile}).map(r=>r[4]))].sort((a,b)=>D.subjects[a][0].localeCompare(D.subjects[b][0],"pl"));
+ const subjectOptions=subjectIds.map(i=>[String(i),`${D.subjects[i][0]} · ${D.subjects[i][1]}`]);
+ subjectSelect.innerHTML=subjectOptions.map(([value,label])=>`<option value="${esc(value)}">${esc(label)}</option>`).join("");
+ if(subjectOptions.some(([value])=>value===String(subjectBefore)))subjectSelect.value=String(subjectBefore);
+ else if(subjectOptions.some(([value])=>value===String(defaultSubjectIndex)))subjectSelect.value=String(defaultSubjectIndex);
+ else if(subjectOptions.length)subjectSelect.value=subjectOptions[0][0];
+ const subject=subjectSelect.value;
+ const levelOptions=[...new Set(availableSubjectGrades({education,profile,subject}).map(r=>String(r[3])))].sort((a,b)=>Number(a)-Number(b)).map(v=>[v,v]);
+ setSelectOptions(subjectLevelEl,levelOptions,"Wszystkie",levelBefore);
+}
 function subjectFiltered(){
- const si=+subjectSelect.value,ed=document.getElementById("subjectEducation").value,pr=document.getElementById("subjectProfile").value,lv=document.getElementById("subjectLevel").value;
+ const si=+subjectSelect.value,ed=subjectEducationEl.value,pr=subjectProfileEl.value,lv=subjectLevelEl.value;
  return D.grades.filter(r=>r[4]===si&&(!ed||r[8]===ed)&&(!pr||r[2]===pr)&&(!lv||String(r[3])===lv));
 }
 function renderSubject(){
+ if(!subjectSelect.options.length)updateSubjectControls();
  const rows=subjectFiltered(),byP=D.periodLabels.map((_,p)=>rows.filter(r=>r[0]===p)),avgs=byP.map(rs=>avg(rs.map(r=>r[5]))),all=rows.map(r=>r[5]);
  const first=avgs.find(Number.isFinite),last=[...avgs].reverse().find(Number.isFinite),delta=Number.isFinite(first)&&Number.isFinite(last)?last-first:null;
  document.getElementById("subjectKpis").innerHTML=[
@@ -337,7 +372,10 @@ function renderSubject(){
  document.getElementById("subjectDistribution").innerHTML=stackedSvg(D.periodLabels,dist);
  document.getElementById("subjectTable").innerHTML=tableHtml(["Rok","N","Średnia","1","2","3","4","5","6"],byP.map((rs,p)=>{const g=rs.map(r=>r[5]);return [D.periodLabels[p],g.length,pl(avg(g)),...[1,2,3,4,5,6].map(value=>{const count=g.filter(x=>x===value).length;return `${pl(pct(count,g.length))}% · ${count}`})]}));
 }
-["subjectSelect","subjectEducation","subjectProfile","subjectLevel"].forEach(id=>document.getElementById(id).addEventListener("change",()=>{renderSubject();writeUrlState();}));
+subjectEducationEl.addEventListener("change",()=>{updateSubjectControls({preserveSubject:true,preserveProfile:false,preserveLevel:false});renderSubject();writeUrlState();});
+subjectProfileEl.addEventListener("change",()=>{updateSubjectControls({preserveSubject:true,preserveProfile:true,preserveLevel:false});renderSubject();writeUrlState();});
+subjectSelect.addEventListener("change",()=>{updateSubjectControls({preserveSubject:true,preserveProfile:true,preserveLevel:false});renderSubject();writeUrlState();});
+subjectLevelEl.addEventListener("change",()=>{renderSubject();writeUrlState();});
 
 const cohortGroups=new Map();D.classes.forEach(r=>{if(!cohortGroups.has(r[0]))cohortGroups.set(r[0],[]);cohortGroups.get(r[0]).push(r)});
 const cohortOptions=[...cohortGroups].filter(([,rs])=>rs.length>=2).map(([k,rs])=>{rs.sort((a,b)=>a[1]-b[1]);const parts=k.split("|"),cycle=rs[0][9]==="bs2"?`cykl ${parts[3]}/${String(+parts[3]+1).slice(-2)}`:`nabór ${parts[3]}`,first=rs[0][2],last=rs.at(-1)[2],bothTerms=rs.length>1&&rs.at(-2)[2]===last&&rs.at(-2)[1]!==rs.at(-1)[1],path=first===last?first:`${first}–${last}`;return [k,`${educationLabel(rs[0][9])} ${parts[2]} · ${cycle} · ${path}${bothTerms?" (I–II)":""}`]}).sort((a,b)=>a[1].localeCompare(b[1],"pl"));
@@ -469,7 +507,7 @@ function rerenderView(view=activeView()){
  else renderOverview();
 }
 function resetFilters(scope){
- if(scope==="subjects"){subjectSelect.value=String(defaultSubjectIndex);document.getElementById("subjectEducation").value="";document.getElementById("subjectProfile").value="";document.getElementById("subjectLevel").value="";renderSubject();setView("subjects",{scroll:false});}
+ if(scope==="subjects"){subjectEducationEl.value="";subjectProfileEl.value="";subjectLevelEl.value="";updateSubjectControls({preserveSubject:false,preserveProfile:false,preserveLevel:false});subjectSelect.value=String(defaultSubjectIndex);updateSubjectControls({preserveSubject:true,preserveProfile:false,preserveLevel:false});renderSubject();setView("subjects",{scroll:false});}
  if(scope==="cohorts"){document.getElementById("cohortSelect").selectedIndex=0;renderCohort();setView("cohorts",{scroll:false});}
  if(scope==="attendance"){document.getElementById("attendanceCohortSelect").selectedIndex=0;renderAttendance();setView("attendance",{scroll:false});}
  if(scope==="departures"){document.getElementById("departureStatus").value="Skreślony";document.getElementById("departureSchool").value="";renderFlow();renderDepartures();setView("departures",{scroll:false});}
@@ -488,7 +526,7 @@ function searchActions(){
   {label:"Profile reprezentatywne uczniów",type:"analiza",view:"departures",target:"representativeCases"},
   {label:"Metodyka i ograniczenia",type:"sekcja",view:"method",target:"qualityList"}
  ];
- const subjects=D.subjects.map((s,i)=>({label:s[0],type:`przedmiot · ${s[1]}`,view:"subjects",target:"subjectLine",set:{subjectSelect:String(i)}}));
+ const subjects=D.subjects.map((s,i)=>({label:s[0],type:`przedmiot · ${s[1]}`,view:"subjects",target:"subjectLine",set:{subjectEducation:"",subjectProfile:"",subjectSelect:String(i),subjectLevel:""}}));
  const cohorts=cohortOptions.flatMap(([value,label])=>[
   {label, type:"rocznik · oceny i frekwencja", view:"cohorts", target:"cohortAverage", set:{cohortSelect:value}},
   {label:`Frekwencja · ${label}`, type:"rocznik · frekwencja", view:"attendance", target:"attendanceCohortTrend", set:{attendanceCohortSelect:value}}
@@ -498,6 +536,7 @@ function searchActions(){
 const allSearchActions=searchActions();
 function runSearchAction(action){
  if(action.set)Object.entries(action.set).forEach(([id,value])=>{const el=document.getElementById(id);if(el)el.value=value;});
+ if(action.view==="subjects")updateSubjectControls({preserveSubject:true,preserveProfile:true,preserveLevel:true});
  setView(action.view,{scroll:true});rerenderView(action.view);writeUrlState();if(action.target)scrollToId(action.target);
  document.getElementById("searchResults").classList.remove("open");document.getElementById("reportSearch").value="";
 }
