@@ -28,11 +28,12 @@ button,select,input{font:inherit}.shell{max-width:1280px;margin:auto;padding:0 2
 .bar-list{display:grid;gap:11px}.bar-row{display:grid;grid-template-columns:minmax(100px,1.2fr) 3fr 48px;gap:10px;align-items:center}.bar-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bar-track{height:11px;border-radius:99px;background:#ece9e2;overflow:hidden}.bar-fill{height:100%;border-radius:99px;background:var(--blue)}.bar-value{text-align:right;font-variant-numeric:tabular-nums;font-weight:750}
 #flowComparison .bar-label{white-space:normal;line-height:1.25;text-overflow:clip}
 .pill{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;background:#e9eef7;color:#345070;font-size:11px;font-weight:750}.empty{display:grid;place-items:center;min-height:220px;color:var(--muted);text-align:center;padding:30px}.discovery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.discover-card{border:1px solid var(--line);background:#fff;border-radius:15px;padding:14px;text-align:left;cursor:pointer;color:var(--ink);min-height:108px}.discover-card:hover,.discover-card:focus{border-color:var(--blue);box-shadow:0 10px 24px rgba(43,103,209,.12);transform:translateY(-1px)}.discover-card strong{display:block;font-size:15px;margin-bottom:5px}.discover-card span{display:block;color:var(--muted);font-size:12px;line-height:1.35}
+.explain-grid{display:grid;grid-template-columns:1.1fr 1fr 1fr;gap:12px}.explain-tile{border:1px solid rgba(43,103,209,.16);background:linear-gradient(145deg,#fff,#f5f9ff);border-radius:16px;padding:14px}.explain-tile strong{display:block;margin-bottom:5px}.explain-tile p{margin:0;color:var(--muted);font-size:13px;line-height:1.4}.interactive-card{background:linear-gradient(145deg,#fffdf8,#f7fbff);border-color:rgba(43,103,209,.18)}.segmented{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0 14px}.seg-btn{border:1px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:8px 11px;font-size:12px;font-weight:850;cursor:pointer}.seg-btn.active{background:var(--navy);border-color:var(--navy);color:#fff}.story-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.story-card{border:1px solid var(--line);background:#fff;border-radius:16px;padding:15px;position:relative;overflow:hidden}.story-card:before{content:"";position:absolute;right:-28px;top:-28px;width:92px;height:92px;border-radius:50%;background:rgba(40,168,184,.12)}.story-card .label{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.07em;font-weight:850}.story-card .value{font-size:clamp(24px,3vw,38px);font-weight:900;line-height:1.05;margin:7px 0}.story-card .detail{font-size:12px;color:var(--muted)}.spark{display:flex;gap:5px;align-items:end;height:46px;margin-top:12px}.spark span{flex:1;border-radius:7px 7px 3px 3px;background:var(--cyan);min-height:8px}.heatmap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.heat-cell{border:1px solid var(--line);background:#fff;border-radius:15px;padding:12px}.heat-cell-head{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:10px}.heat-cell strong{font-size:14px}.heat-steps{display:grid;grid-template-columns:repeat(6,1fr);gap:4px}.heat-box{height:32px;border-radius:8px;display:grid;place-items:center;color:#fff;font-size:10px;font-weight:850}.heat-caption{font-size:11px;color:var(--muted);margin-top:8px}.movement-board{display:grid;grid-template-columns:1fr 1.25fr;gap:14px;align-items:start}.movement-flow{display:grid;gap:10px}.flow-band{display:grid;grid-template-columns:112px 1fr 54px;gap:9px;align-items:center}.flow-track{height:15px;border-radius:999px;background:#ece9e2;overflow:hidden}.flow-fill{height:100%;border-radius:999px}.flow-note{margin-top:12px;color:var(--muted);font-size:13px}.tap-row{display:flex;gap:8px;flex-wrap:wrap}.tap-card{border:1px solid var(--line);background:#fff;border-radius:14px;padding:10px 12px;cursor:pointer;color:var(--ink);text-align:left;min-width:105px}.tap-card.active{border-color:var(--blue);box-shadow:0 8px 20px rgba(43,103,209,.12)}.tap-card small{display:block;color:var(--muted);font-size:11px}.tap-card strong{font-size:18px}.mobile-hint{display:none;color:var(--muted);font-size:12px;margin-top:8px}
 .case-card{position:relative;padding-top:48px}.case-no{position:absolute;top:16px;left:18px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--navy);color:white;font-size:12px;font-weight:850}.case-card h3{font-size:18px}.case-id{font-size:12px;color:var(--muted);font-weight:750;margin-bottom:12px}.case-path{font-size:15px;font-weight:800;line-height:1.4}.case-detail{color:var(--muted);margin-top:9px}.case-arrow{color:var(--blue);padding:0 5px}
 .footer{margin-top:30px;color:var(--muted);font-size:12px}.site-footer{background:#fff;border-top:1px solid var(--line);padding:28px max(22px,calc((100vw - 1236px)/2));display:flex;align-items:center;justify-content:space-between;gap:28px}.footer-brand{display:block;width:min(470px,100%)}.footer-brand img{display:block;width:100%;height:auto}.footer-link{color:var(--navy);font-weight:800;text-decoration:none}.footer-link:hover{text-decoration:underline}.footer-meta{color:var(--muted);font-size:13px;text-align:right}.mobile-only{display:none}
-@media(max-width:900px){.kpis,.three{grid-template-columns:repeat(2,1fr)}.two,.equal{grid-template-columns:1fr}.section-head{display:block}.section-head p{margin-top:8px}.discovery-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.kpis,.three{grid-template-columns:repeat(2,1fr)}.two,.equal,.movement-board{grid-template-columns:1fr}.section-head{display:block}.section-head p{margin-top:8px}.discovery-grid,.explain-grid,.story-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){.hero{min-height:0}.hero-inner{padding-right:108px}.hero-mark{right:0;width:92px;height:92px;padding:10px;border-radius:24px}}
-@media(max-width:560px){body{font-size:14px;line-height:1.42}.shell{padding:0 10px 34px}.hero{padding:12px 14px 14px}.hero:after{display:none}.hero-inner{padding-right:58px}.hero-top{margin-bottom:2px;gap:12px}.hero-mark{width:48px;height:48px;right:0;padding:3px;border-radius:12px;background:transparent;box-shadow:none;filter:invert(1) brightness(1.42) drop-shadow(0 6px 12px rgba(0,0,0,.22))}.hero .eyebrow{font-size:9px;letter-spacing:.11em}.hero h1{font-size:26px;line-height:1.02;margin:7px 0 0;max-width:310px}.hero p{display:none}.stamp{margin-top:8px;font-size:11px}.tabs{display:flex;gap:6px;align-items:center;padding:6px 8px}.tab{padding:7px 10px;font-size:13px;line-height:1.1;flex:0 0 auto}.explore-bar{top:43px;grid-template-columns:1fr;padding:6px 8px}.explore-bar .copy-link{display:none}.search-wrap input{padding:9px 13px;font-size:13px}.search-results{max-height:260px}.search-result{padding:9px 10px}.view{padding-top:14px}.section-head,.card,.chart,.table-wrap{scroll-margin-top:100px}.section-head{margin-bottom:12px}.section-head h2{font-size:24px}.section-head p{font-size:13px;margin-top:6px}.kpis,.three{grid-template-columns:1fr 1fr;gap:8px}.history-grid{grid-template-columns:1fr}.discovery-grid{grid-template-columns:1fr;gap:8px}.discover-card{min-height:78px;padding:11px 12px}.discover-card strong{font-size:14px}.discover-card span{font-size:11px}.card{padding:12px;border-radius:14px}.card h3{font-size:15px}.card .sub{font-size:11px;margin-bottom:10px}.metric{font-size:27px}.metric-label{font-size:12px;margin-top:6px}.delta{font-size:11px;margin-top:6px}.chart{min-height:190px}.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}.control{min-width:0;gap:4px}.control.wide{grid-column:1/-1}.control label{font-size:10px}.control select,.control input,.reset-filters{padding:8px 9px;font-size:13px}.table-wrap{max-height:58vh;border-radius:10px}th,td{padding:8px 9px;font-size:12px}.bar-list{gap:8px}.bar-row{grid-template-columns:102px 1fr 38px;gap:7px}.bar-label,.bar-value{font-size:12px}.bar-track{height:10px}.legend{gap:7px;font-size:11px}.pill{padding:4px 7px;font-size:10px}.note{padding:11px;font-size:12px;border-radius:12px}.insight{padding-left:12px}.insight strong{font-size:15px}.case-card{padding-top:42px}.case-no{top:13px;left:13px}.site-footer{display:block;padding:18px 14px}.footer-brand{width:100%}.footer-meta{text-align:left;margin-top:12px}.mobile-only{display:block}}
+@media(max-width:560px){body{font-size:14px;line-height:1.42}.shell{padding:0 10px 34px}.hero{padding:12px 14px 14px}.hero:after{display:none}.hero-inner{padding-right:58px}.hero-top{margin-bottom:2px;gap:12px}.hero-mark{width:48px;height:48px;right:0;padding:3px;border-radius:12px;background:transparent;box-shadow:none;filter:invert(1) brightness(1.42) drop-shadow(0 6px 12px rgba(0,0,0,.22))}.hero .eyebrow{font-size:9px;letter-spacing:.11em}.hero h1{font-size:26px;line-height:1.02;margin:7px 0 0;max-width:310px}.hero p{display:none}.stamp{margin-top:8px;font-size:11px}.tabs{display:flex;gap:6px;align-items:center;padding:6px 8px}.tab{padding:7px 10px;font-size:13px;line-height:1.1;flex:0 0 auto}.explore-bar{top:43px;grid-template-columns:1fr;padding:6px 8px}.explore-bar .copy-link{display:none}.search-wrap input{padding:9px 13px;font-size:13px}.search-results{max-height:260px}.search-result{padding:9px 10px}.view{padding-top:14px}.section-head,.card,.chart,.table-wrap{scroll-margin-top:100px}.section-head{margin-bottom:12px}.section-head h2{font-size:24px}.section-head p{font-size:13px;margin-top:6px}.kpis,.three{grid-template-columns:1fr 1fr;gap:8px}.history-grid,.heatmap,.story-grid,.explain-grid,.discovery-grid{grid-template-columns:1fr;gap:8px}.discover-card{min-height:78px;padding:11px 12px}.discover-card strong{font-size:14px}.discover-card span{font-size:11px}.card{padding:12px;border-radius:14px}.card h3{font-size:15px}.card .sub{font-size:11px;margin-bottom:10px}.metric{font-size:27px}.metric-label{font-size:12px;margin-top:6px}.delta{font-size:11px;margin-top:6px}.chart{min-height:190px}.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}.control{min-width:0;gap:4px}.control.wide{grid-column:1/-1}.control label{font-size:10px}.control select,.control input,.reset-filters{padding:8px 9px;font-size:13px}.table-wrap{max-height:58vh;border-radius:10px}th,td{padding:8px 9px;font-size:12px}.bar-list{gap:8px}.bar-row{grid-template-columns:102px 1fr 38px;gap:7px}.bar-label,.bar-value{font-size:12px}.bar-track{height:10px}.legend{gap:7px;font-size:11px}.pill{padding:4px 7px;font-size:10px}.note{padding:11px;font-size:12px;border-radius:12px}.insight{padding-left:12px}.insight strong{font-size:15px}.case-card{padding-top:42px}.case-no{top:13px;left:13px}.segmented{overflow-x:auto;flex-wrap:nowrap;padding-bottom:3px}.seg-btn{flex:0 0 auto}.flow-band{grid-template-columns:88px 1fr 42px}.story-card .value{font-size:25px}.mobile-hint{display:block}.site-footer{display:block;padding:18px 14px}.footer-brand{width:100%}.footer-meta{text-align:left;margin-top:12px}.mobile-only{display:block}}
 @media print{.tabs,.filters{display:none}.view{display:block!important;break-before:page}.card{box-shadow:none}.hero{print-color-adjust:exact}}
 </style>
 </head>
@@ -112,6 +113,19 @@ button,select,input{font:inherit}.shell{max-width:1280px;margin:auto;padding:0 2
   <section class="view" id="attendance">
     <div class="section-head"><div><div class="eyebrow" style="color:var(--cyan)">Frekwencja</div><h2>Frekwencja w latach 2023–2026</h2></div><p>Sekcja korzysta z podsumowania w <code>statystyka_uczniow_2023-2026.md</code> oraz z anonimowych rekordów oddziałów. Pokazuje trend całej szkoły, wejście klas pierwszych, porównanie aktualnych oddziałów z benchmarkiem tego samego poziomu i historię obecnych roczników.</p></div>
     <div class="grid kpis" id="attendanceKpis"></div>
+    <article class="card interactive-card" style="margin-top:16px">
+      <h3>Jak czytać benchmark?</h3>
+      <p class="sub">Benchmark to punkt odniesienia: średnia frekwencja grupy podobnej do analizowanego oddziału.</p>
+      <div class="explain-grid">
+        <div class="explain-tile"><strong>1. Ten sam typ szkoły</strong><p>Technikum porównujemy z technikum, BS I z BS I. BS II i klasy 5 technikum są pokazane bez benchmarku, jeśli MD nie ma porównywalnej grupy.</p></div>
+        <div class="explain-tile"><strong>2. Ten sam poziom klasy</strong><p>Klasa druga jest porównywana ze średnią klas drugich, trzecia z trzecimi itd. To nie jest porównanie do całej szkoły.</p></div>
+        <div class="explain-tile"><strong>3. Różnica w p.p.</strong><p>p.p. oznacza punkty procentowe. 72% wobec benchmarku 75% to różnica −3 p.p., a nie „−3%”.</p></div>
+      </div>
+    </article>
+    <div class="grid two" style="margin-top:16px">
+      <article class="card interactive-card"><h3>Eksplorator benchmarku</h3><p class="sub">Kliknij typ szkoły i poziom klasy. Karty pokażą trend punktu odniesienia oraz zmianę w czasie.</p><div id="benchmarkExplorer"></div><div class="mobile-hint">Na telefonie przewiń przyciski poziomów poziomo, jeśli nie mieszczą się w jednym rzędzie.</div></article>
+      <article class="card interactive-card"><h3>Mapa półroczy</h3><p class="sub">Ciemniejszy kolor oznacza wyższą frekwencję w danym półroczu. Widać sezonowy spadek między I i II półroczem.</p><div id="semesterHeatmap"></div></article>
+    </div>
     <div class="grid two" style="margin-top:16px">
       <article class="card"><h3>Cała szkoła — półrocza i rok</h3><p class="sub">Średnie na poziomie ucznia; I półrocze, II półrocze i frekwencja roczna</p><div class="chart" id="attendanceSchoolTrend"></div></article>
       <article class="card"><h3>Klasy pierwsze — rocznik wejściowy</h3><p class="sub">Porównanie kolejnych roczników klas pierwszych</p><div class="chart" id="attendanceFirstClasses"></div></article>
@@ -121,7 +135,7 @@ button,select,input{font:inherit}.shell{max-width:1280px;margin:auto;padding:0 2
       <article class="card"><h3>2025/26: półrocze a rok</h3><p class="sub">Roczna frekwencja maskuje spadek w II półroczu</p><div class="table-wrap"><table id="attendanceSemesterTable"></table></div></article>
     </div>
     <article class="card" style="margin-top:16px"><h3>Poziomy klas — półrocze po półroczu</h3><p class="sub">Nowe dane z MD: każdy okres to dany poziom klasy w danym roku, nie ta sama grupa uczniów.</p><div class="table-wrap"><table id="attendanceLevelSemesterTable"></table></div></article>
-    <article class="card" style="margin-top:16px"><h3>Aktualne oddziały wobec benchmarku tego samego poziomu</h3><p class="sub">Oddziały z 2025/26 są porównane z historycznymi średnimi tego samego typu szkoły i poziomu. BS II i klasy 5 Technikum są pokazane bez benchmarku, bo nie ma ich w tabeli MD.</p><div class="table-wrap"><table id="attendanceCurrentComparison"></table></div></article>
+    <article class="card interactive-card" style="margin-top:16px"><h3>Aktualne oddziały wobec benchmarku tego samego poziomu</h3><p class="sub">Oddziały z 2025/26 są porównane z historycznymi średnimi tego samego typu szkoły i poziomu. Wybierz zakres, a tabela zostanie zawężona.</p><div class="segmented" id="benchmarkDiffFilter" aria-label="Filtr różnic wobec benchmarku"></div><div id="benchmarkClassCards"></div><div class="table-wrap" style="margin-top:14px"><table id="attendanceCurrentComparison"></table></div></article>
     <div class="grid two" style="margin-top:16px">
       <article class="card"><h3>Najniższe różnice wobec benchmarku</h3><p class="sub">Tylko oddziały, dla których istnieje benchmark w MD</p><div id="attendanceGapBars"></div></article>
       <article class="card"><h3>Klasy BS I — 2025/26</h3><p class="sub">Zestawienie z podsumowania MD</p><div id="attendanceBsiBars"></div></article>
@@ -152,6 +166,20 @@ button,select,input{font:inherit}.shell{max-width:1280px;margin:auto;padding:0 2
   <section class="view" id="departures">
     <div class="section-head"><div><div class="eyebrow" style="color:var(--red)">Ewidencja uczniów</div><h2>Napływ, skreślenia i przeniesienia</h2></div><p>Normalny nabór 1 września jest oddzielony od uczniów przyjętych później. Przeniesienia wewnętrzne nie są automatycznie liczone jako przyjście do szkoły ani jej opuszczenie.</p></div>
     <div class="grid kpis" id="flowKpis"></div>
+    <article class="card interactive-card" style="margin-top:16px">
+      <h3>Słownik ruchu uczniów</h3>
+      <p class="sub">Te pojęcia są rozdzielone, żeby nie mieszać ubytku ze szkoły ze zmianą oddziału lub normalnym zakończeniem nauki.</p>
+      <div class="explain-grid">
+        <div class="explain-tile"><strong>Skreślenia / odbiory</strong><p>Uczniowie, którzy przestali uczęszczać do szkoły. W porównaniu trzyletnim osobno pokazane są odbiory w roku i odbiory wakacyjne.</p></div>
+        <div class="explain-tile"><strong>Przyjęcia po 1 września</strong><p>Osoby, które rozpoczęły naukę po regularnym starcie roku szkolnego. To osobna kategoria względem naboru 1 września.</p></div>
+        <div class="explain-tile"><strong>Przeniesienia</strong><p>Zmiany oddziału lub typu szkoły w ramach zespołu. Są pokazane osobno, a nie jako automatyczny ubytek ze szkoły.</p></div>
+      </div>
+    </article>
+    <article class="card interactive-card" style="margin-top:16px">
+      <h3>Ruch uczniów — interaktywny pulpit</h3>
+      <p class="sub">Wybierz rok i sposób rozbicia. Paski pokazują te same dane co tabele, ale pozwalają szybciej zobaczyć proporcje.</p>
+      <div id="movementExplorer"></div>
+    </article>
     <article class="card" style="margin-top:16px"><h3>Ruch poza regularnym naborem — 2025/26</h3><p class="sub">Jedna skala porównawcza: przyjęcia po 1 września i skreślenia</p><div id="flowComparison"></div></article>
     <div class="section-head" style="margin-top:28px"><div><div class="eyebrow" style="color:var(--red)">Porównanie trzyletnie</div><h2>Skreślenia w kolejnych latach szkolnych</h2></div><p>Skreślenia oznaczają odejścia ze szkoły. Przeniesienia wewnętrzne są wykazane osobno i nie zwiększają liczby skreśleń.</p></div>
     <div class="grid three history-grid">
@@ -243,7 +271,17 @@ function barsHtml(items,color=COLORS.blue,limit=12){
  const data=items.slice(0,limit),mx=Math.max(1,...data.map(x=>x[1]));
  return `<div class="bar-list">${data.map(([label,val])=>`<div class="bar-row"><div class="bar-label" title="${esc(label)}">${esc(label)}</div><div class="bar-track"><div class="bar-fill" style="width:${100*val/mx}%;background:${color}"></div></div><div class="bar-value">${pl(val)}</div></div>`).join("")}</div>`;
 }
-function tableHtml(headers,rows){return `<thead><tr>${headers.map((x,i)=>`<th class="sortable" data-sort-col="${i}" title="Kliknij, aby sortować">${esc(x)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(x=>`<td>${x??"—"}</td>`).join("")}</tr>`).join("")}</tbody>`}
+function tableHtml(headers,rows){return `<thead><tr>${headers.map((x,i)=>`<th class="sortable" data-sort-col="${i}" title="Kliknij, aby sortować">${esc(x)}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((x,i)=>`<td data-label="${esc(headers[i]??"")}">${x??"—"}</td>`).join("")}</tr>`).join("")}</tbody>`}
+function pctColor(v){
+ if(!Number.isFinite(v))return "#cbd5e1";
+ const t=Math.max(0,Math.min(1,(v-55)/30));
+ const r=Math.round(201+(40-201)*t),g=Math.round(76+(168-76)*t),b=Math.round(76+(184-76)*t);
+ return `rgb(${r},${g},${b})`;
+}
+function sparkBars(values,color=COLORS.cyan){
+ const defined=values.filter(Number.isFinite),mn=Math.min(...defined),mx=Math.max(...defined),span=Math.max(1,mx-mn);
+ return `<div class="spark">${values.map(v=>`<span style="height:${Number.isFinite(v)?24+22*(v-mn)/span:8}px;background:${color}" title="${fmtPct(v)}"></span>`).join("")}</div>`;
+}
 function activeView(){return document.querySelector(".view.active")?.id||"overview";}
 function setView(view,{scroll=true,write=true}={}){
  const target=document.getElementById(view);if(!target)return;
@@ -397,6 +435,55 @@ function renderCohort(){
 document.getElementById("cohortSelect").addEventListener("change",()=>{renderCohort();writeUrlState();});
 
 function benchmarkStageLabel(stage){return stage==="technikum"?"Technikum":stage==="bs1"?"BS I":stage==="bs2"?"BS II":stage;}
+let benchmarkExplorerType="Technikum",benchmarkExplorerLevel=1,benchmarkDiffMode="all",movementExplorerYear="2025/2026",movementExplorerMode="school";
+function renderBenchmarkExplorer(A){
+ const types=[...new Set(A.levelBenchmarks.map(r=>r[0]))];
+ if(!types.includes(benchmarkExplorerType))benchmarkExplorerType=types[0]||"Technikum";
+ const levels=A.levelBenchmarks.filter(r=>r[0]===benchmarkExplorerType).map(r=>r[1]);
+ if(!levels.includes(benchmarkExplorerLevel))benchmarkExplorerLevel=levels[0]||1;
+ const row=A.levelBenchmarks.find(r=>r[0]===benchmarkExplorerType&&r[1]===benchmarkExplorerLevel);
+ const values=row?row.slice(2,5):[];
+ const change=row?row[4]-row[2]:null;
+ document.getElementById("benchmarkExplorer").innerHTML=`
+  <div class="segmented">${types.map(t=>`<button class="seg-btn ${t===benchmarkExplorerType?"active":""}" type="button" data-benchmark-type="${esc(t)}">${esc(t)}</button>`).join("")}</div>
+  <div class="segmented">${levels.map(l=>`<button class="seg-btn ${l===benchmarkExplorerLevel?"active":""}" type="button" data-benchmark-level="${l}">klasa ${l}</button>`).join("")}</div>
+  ${row?`<div class="story-grid">
+   <div class="story-card"><div class="label">punkt odniesienia 2023/24</div><div class="value">${fmtPct(row[2])}</div><div class="detail">${esc(row[0])} · poziom ${row[1]}</div></div>
+   <div class="story-card"><div class="label">punkt odniesienia 2025/26</div><div class="value">${fmtPct(row[4])}</div><div class="detail">${Number.isFinite(change)?`${change>=0?"+":""}${pl(change)} p.p. od 2023/24`:"brak zmiany"}</div></div>
+   <div class="story-card"><div class="label">mini trend</div><div class="value">${change>=0?"↗":"↘"} ${Number.isFinite(change)?pl(Math.abs(change)):"—"} p.p.</div><div class="detail">2023/24 → 2024/25 → 2025/26</div>${sparkBars(values,change>=0?COLORS.green:COLORS.red)}</div>
+  </div>`:`<div class="empty">Brak benchmarku dla wybranego poziomu.</div>`}`;
+ document.querySelectorAll("[data-benchmark-type]").forEach(btn=>btn.addEventListener("click",()=>{benchmarkExplorerType=btn.dataset.benchmarkType;renderAttendance();}));
+ document.querySelectorAll("[data-benchmark-level]").forEach(btn=>btn.addEventListener("click",()=>{benchmarkExplorerLevel=+btn.dataset.benchmarkLevel;renderAttendance();}));
+}
+function renderSemesterHeatmap(A){
+ const labels=["I 23/24","II 23/24","I 24/25","II 24/25","I 25/26","II 25/26"];
+ document.getElementById("semesterHeatmap").innerHTML=`<div class="heatmap">${A.levelSemester.map(r=>{
+  const vals=r.slice(2),drops=[vals[0]-vals[1],vals[2]-vals[3],vals[4]-vals[5]].filter(Number.isFinite),avgDrop=drops.length?avg(drops):null;
+  return `<div class="heat-cell"><div class="heat-cell-head"><strong>${esc(r[0])} · kl. ${r[1]}</strong><span class="pill">śr. spadek ${Number.isFinite(avgDrop)?pl(avgDrop):"—"} p.p.</span></div><div class="heat-steps">${vals.map((v,i)=>`<div class="heat-box" style="background:${pctColor(v)}" title="${esc(r[0])}, klasa ${r[1]}, ${labels[i]}: ${fmtPct(v)}">${Number.isFinite(v)?Math.round(v):"—"}</div>`).join("")}</div><div class="heat-caption">${labels.join(" · ")}</div></div>`;
+ }).join("")}</div>`;
+}
+function renderBenchmarkDiffFilter(){
+ const items=[["all","Wszystkie"],["below","Poniżej benchmarku"],["above","Powyżej benchmarku"],["missing","Bez benchmarku"]];
+ document.getElementById("benchmarkDiffFilter").innerHTML=items.map(([key,label])=>`<button class="seg-btn ${benchmarkDiffMode===key?"active":""}" type="button" data-diff-mode="${key}">${label}</button>`).join("");
+ document.querySelectorAll("[data-diff-mode]").forEach(btn=>btn.addEventListener("click",()=>{benchmarkDiffMode=btn.dataset.diffMode;renderAttendance();}));
+}
+function renderBenchmarkClassCards(filteredGaps){
+ const rows=filteredGaps.slice().sort((a,b)=>(Number.isFinite(a.diff)?a.diff:999)-(Number.isFinite(b.diff)?b.diff:999)).slice(0,9);
+ const html=rows.map(x=>{
+  const has=!!x.b, diff=x.diff, freq=x.row[7], bench=has?x.b[4]:null;
+  const status=!has?"brak benchmarku w MD":diff<=-1?"poniżej benchmarku":diff>=1?"powyżej benchmarku":"zbliżone do benchmarku";
+  const color=!has?COLORS.gold:diff<0?COLORS.red:diff>0?COLORS.green:COLORS.blue;
+  const width=has?Math.min(100,Math.max(0,100*(freq/Math.max(1,bench)))):0;
+  return `<div class="story-card">
+   <div class="label">${esc(x.type)} · poziom ${x.row[5]} · ${pl(x.row[8])} uczniów</div>
+   <div class="value">${esc(x.row[2])}</div>
+   <div class="detail">Frekwencja ${fmtPct(freq)} · ${has?`benchmark ${fmtPct(bench)}`:"benchmark: brak"}</div>
+   <div class="flow-band" style="margin-top:12px"><div>${has?"różnica":"status"}</div><div class="flow-track"><div class="flow-fill" style="width:${has?width:100}%;background:${color}"></div></div><strong>${Number.isFinite(diff)?`${pl(diff)} p.p.`:"—"}</strong></div>
+   <div class="detail" style="margin-top:8px">${status}</div>
+  </div>`;
+ }).join("");
+ document.getElementById("benchmarkClassCards").innerHTML=rows.length?`<div class="story-grid">${html}</div>`:`<div class="empty">Brak oddziałów dla wybranego filtra.</div>`;
+}
 function renderAttendance(){
  const A=D.attendanceStats,school=A.schoolSemester,years=school.map(r=>r[0].replace("20","").replace("/20","/"));
  const current=school.at(-1),previous=school.at(-2),first=A.firstClasses.at(-1),firstStartDelta=first[1]-A.firstClasses[0][1];
@@ -409,12 +496,17 @@ function renderAttendance(){
   metric(fmtPct(first[3]),"klasy pierwsze 2025/26",`${pl(firstStartDelta)} p.p. wobec 2023/24`,"down"),
   metric(pl(below), "aktualnych oddziałów poniżej benchmarku", `${benchmarked.length} z benchmarkiem`)
  ].join("");
+ renderBenchmarkExplorer(A);
+ renderSemesterHeatmap(A);
  document.getElementById("attendanceSchoolTrend").innerHTML=lineSvg(years,[{name:"I półrocze",values:school.map(r=>r[1]),color:COLORS.blue},{name:"II półrocze",values:school.map(r=>r[2]),color:COLORS.red},{name:"roczna",values:school.map(r=>r[3]),color:COLORS.cyan}],{min:60,max:85,percent:true});
  document.getElementById("attendanceFirstClasses").innerHTML=lineSvg(A.firstClasses.map(r=>r[0].replace("20","").replace("/20","/")),[{name:"I półrocze",values:A.firstClasses.map(r=>r[1]),color:COLORS.blue},{name:"II półrocze",values:A.firstClasses.map(r=>r[2]),color:COLORS.red},{name:"roczna",values:A.firstClasses.map(r=>r[3]),color:COLORS.cyan}],{min:60,max:85,percent:true})+`<div class="legend">${A.firstClasses.map(r=>`<span class="pill">${esc(r[0])}: ${esc(r[4])}</span>`).join("")}</div>`;
  document.getElementById("attendanceLevelTable").innerHTML=tableHtml(["Typ szkoły","Poziom","2023/24","2024/25","2025/26","zmiana 23/24→25/26"],A.levelBenchmarks.map(r=>[r[0],r[1],fmtPct(r[2]),fmtPct(r[3]),fmtPct(r[4]),`${pl(r[4]-r[2])} p.p.`]));
  document.getElementById("attendanceSemesterTable").innerHTML=tableHtml(["Grupa","I półrocze","II półrocze","Roczna","spadek I→II"],A.semesterYear2025.map(r=>[r[0],fmtPct(r[1]),fmtPct(r[2]),fmtPct(r[3]),`${pl(r[1]-r[2])} p.p.`]));
  document.getElementById("attendanceLevelSemesterTable").innerHTML=tableHtml(["Typ szkoły","Poziom","I 23/24","II 23/24","I 24/25","II 24/25","I 25/26","II 25/26"],A.levelSemester.map(r=>[r[0],r[1],...r.slice(2).map(fmtPct)]));
- const comparisonRows=gaps.sort((a,b)=>(Number.isFinite(a.diff)?a.diff:999)-(Number.isFinite(b.diff)?b.diff:999)).map(x=>[x.row[2],x.type,x.row[5],fmtPct(x.row[7]),x.b?fmtPct(x.b[4]):"brak w MD",Number.isFinite(x.diff)?`${pl(x.diff)} p.p.`:"—",x.b?fmtPct(x.b[3]):"—",x.b?fmtPct(x.b[2]):"—",x.row[8]]);
+ renderBenchmarkDiffFilter();
+ const filteredGaps=gaps.filter(x=>benchmarkDiffMode==="all"||benchmarkDiffMode==="below"&&x.diff<0||benchmarkDiffMode==="above"&&x.diff>=0||benchmarkDiffMode==="missing"&&!x.b);
+ renderBenchmarkClassCards(filteredGaps);
+ const comparisonRows=filteredGaps.sort((a,b)=>(Number.isFinite(a.diff)?a.diff:999)-(Number.isFinite(b.diff)?b.diff:999)).map(x=>[x.row[2],x.type,x.row[5],fmtPct(x.row[7]),x.b?fmtPct(x.b[4]):"brak w MD",Number.isFinite(x.diff)?`${pl(x.diff)} p.p.`:"—",x.b?fmtPct(x.b[3]):"—",x.b?fmtPct(x.b[2]):"—",x.row[8]]);
  document.getElementById("attendanceCurrentComparison").innerHTML=tableHtml(["Oddział","Typ","Poziom","Frekwencja 2025/26","Benchmark poziomu 2025/26","Różnica","Benchmark 2024/25","Benchmark 2023/24","Uczniów"],comparisonRows);
  decorateDiffTable("attendanceCurrentComparison",5);
  const lowest=benchmarked.sort((a,b)=>a.diff-b.diff).slice(0,10).map(x=>[`${x.row[2]} · ${pl(x.diff)} p.p.`,Math.max(0,-x.diff)]);
@@ -469,12 +561,44 @@ function renderRepresentativeCases(){
  document.getElementById("representativeCases").innerHTML=cases.map((c,i)=>`<article class="card case-card"><span class="case-no">${i+1}</span><h3>${c[0]}</h3><div class="case-id">${c[1]}</div><div class="case-path">${c[2]}</div><div class="case-detail">${c[3]}</div></article>`).join("");
 }
 
+function shortYearLabel(full){return `${full.slice(0,4)}/${full.slice(-2)}`;}
+function renderMovementExplorer(){
+ const years=D.studentStatistics.map(r=>r[0]);
+ if(!years.includes(movementExplorerYear))movementExplorerYear=years.at(-1);
+ const yearRow=D.studentStatistics.find(r=>r[0]===movementExplorerYear),short=shortYearLabel(movementExplorerYear);
+ const late=D.arrivals.filter(r=>r[2]===short&&!r[3]).length;
+ const laterCoverage=pct(late,yearRow[5]);
+ const source=movementExplorerMode==="school"?D.movementBySchool:D.movementByGender;
+ const categories=source.filter(r=>r[0]===short);
+ const maxAttend=Math.max(1,...categories.map(r=>r[2]));
+ document.getElementById("movementExplorer").innerHTML=`
+  <div class="tap-row">${years.map(y=>`<button class="tap-card ${y===movementExplorerYear?"active":""}" type="button" data-move-year="${y}"><small>rok</small><strong>${shortYearLabel(y)}</strong></button>`).join("")}</div>
+  <div class="segmented"><button class="seg-btn ${movementExplorerMode==="school"?"active":""}" type="button" data-move-mode="school">wg typu szkoły</button><button class="seg-btn ${movementExplorerMode==="gender"?"active":""}" type="button" data-move-mode="gender">wg płci</button></div>
+  <div class="story-grid">
+   <div class="story-card"><div class="label">uczęszczający</div><div class="value">${pl(yearRow[1])}</div><div class="detail">populacja ujęta w roku ${short}</div></div>
+   <div class="story-card"><div class="label">skreśleni razem</div><div class="value">${pl(yearRow[5])}</div><div class="detail">w roku: ${pl(yearRow[3])}, wakacyjne: ${pl(yearRow[4])}</div></div>
+   <div class="story-card"><div class="label">późniejsze przyjęcia</div><div class="value">${pl(late)}</div><div class="detail">${Number.isFinite(laterCoverage)?pl(laterCoverage)+"% liczby skreśleń":"brak danych porównawczych"}</div></div>
+  </div>
+  <div class="movement-board" style="margin-top:14px">
+   <div class="movement-flow">
+    ${[["Uczęszczający",yearRow[1],COLORS.blue],["Absolwenci",yearRow[2],COLORS.green],["Skreśleni",yearRow[5],COLORS.red],["Przeniesienia",yearRow[6],COLORS.gold],["Późniejsze przyjęcia",late,COLORS.cyan]].map(([label,value,color])=>`<div class="flow-band"><div>${label}</div><div class="flow-track"><div class="flow-fill" style="width:${100*value/Math.max(1,yearRow[1])}%;background:${color}"></div></div><strong>${pl(value)}</strong></div>`).join("")}
+    <div class="flow-note">Odbiory wakacyjne dla 2025/26 są zerowe, bo okres wakacyjny jeszcze nie nastąpił w danych MD.</div>
+   </div>
+   <div class="story-grid">
+    ${categories.map(r=>`<div class="story-card"><div class="label">${movementExplorerMode==="school"?"typ szkoły":"płeć"}</div><div class="value">${esc(r[1])}</div><div class="detail">uczęszczający: ${pl(r[2])}</div><div class="flow-band"><div>skreśleni</div><div class="flow-track"><div class="flow-fill" style="width:${100*r[4]/maxAttend}%;background:${COLORS.red}"></div></div><strong>${pl(r[4])}</strong></div><div class="flow-band"><div>przenies.</div><div class="flow-track"><div class="flow-fill" style="width:${100*r[5]/maxAttend}%;background:${COLORS.gold}"></div></div><strong>${pl(r[5])}</strong></div></div>`).join("")}
+   </div>
+  </div>`;
+ document.querySelectorAll("[data-move-year]").forEach(btn=>btn.addEventListener("click",()=>{movementExplorerYear=btn.dataset.moveYear;renderFlow();}));
+ document.querySelectorAll("[data-move-mode]").forEach(btn=>btn.addEventListener("click",()=>{movementExplorerMode=btn.dataset.moveMode;renderFlow();}));
+}
+
 function renderFlow(){
  const current=D.arrivals.filter(r=>r[2]==="2025/26"),regular=current.filter(r=>r[3]),late=current.filter(r=>!r[3]);
  const removed=D.studentStatistics.find(r=>r[0]==="2025/2026")[5];
  const lateActive=late.filter(r=>r[7]==="Uczeń").length,lateRemoved=late.filter(r=>r[7]==="Skreślony").length;
  const coverage=pct(late.length,removed);
  const removalRatio=removed/late.length;
+ renderMovementExplorer();
  document.getElementById("flowKpis").innerHTML=[
   metric(pl(current.length),"rozpoczęło naukę w 2025/26","pierwszy wpis w ewidencji"),
   metric(pl(regular.length),"rozpoczęło 1 września","regularny nabór"),
