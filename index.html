@@ -320,13 +320,34 @@ const profileLabel=x=>x==="nieustalony"?"BS II":x==="wielobranzowa"?"wielozawodo
 const schoolShort=x=>x.includes("II stopnia")?"BS II":x.includes("I stopnia")?"BS I":"Technikum";
 const metric=(value,label,delta="",cls="")=>`<article class="card"><div class="metric">${value}</div><div class="metric-label">${label}</div>${delta?`<div class="delta ${cls}">${delta}</div>`:""}</article>`;
 function selectOptions(id, values, all="Wszystkie"){const el=document.getElementById(id);el.innerHTML=`<option value="">${all}</option>`+values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");}
-function lineSvg(labels,series,{min=1,max=6,percent=false}={}){
+function seriesValues(series){
+ return series.flatMap(s=>s.values||[]).filter(Number.isFinite);
+}
+function fitScale(series,{floor=-Infinity,ceil=Infinity,minSpan=1,pad=.18,percent=false,integer=false}={}){
+ const vals=seriesValues(series);
+ if(!vals.length)return {min:Number.isFinite(floor)?floor:0,max:Number.isFinite(ceil)?ceil:1,percent,scaleNote:false};
+ let mn=Math.min(...vals),mx=Math.max(...vals),span=mx-mn;
+ const wanted=Math.max(span*(1+pad*2),minSpan);
+ let mid=span?((mn+mx)/2):mn,lo=mid-wanted/2,hi=mid+wanted/2;
+ if(Number.isFinite(floor)&&lo<floor){hi+=floor-lo;lo=floor}
+ if(Number.isFinite(ceil)&&hi>ceil){lo-=hi-ceil;hi=ceil}
+ if(Number.isFinite(floor))lo=Math.max(floor,lo);
+ if(Number.isFinite(ceil))hi=Math.min(ceil,hi);
+ const step=integer?1:(percent?.5:.05);
+ lo=Math.floor(lo/step)*step;hi=Math.ceil(hi/step)*step;
+ if(Number.isFinite(floor))lo=Math.max(floor,lo);
+ if(Number.isFinite(ceil))hi=Math.min(ceil,hi);
+ if(hi<=lo)hi=lo+Math.max(step,minSpan);
+ return {min:lo,max:hi,percent,scaleNote:true};
+}
+function lineSvg(labels,series,{min=1,max=6,percent=false,scaleNote=false}={}){
  const w=720,h=300,p={l:48,r:22,t:24,b:45},iw=w-p.l-p.r,ih=h-p.t-p.b;
  const X=i=>p.l+(labels.length===1?iw/2:i*iw/(labels.length-1)); const Y=v=>p.t+(max-v)*ih/(max-min);
- const grid=[0,1,2,3,4].map(i=>{const v=min+(max-min)*i/4,y=Y(v);return `<line x1="${p.l}" y1="${y}" x2="${w-p.r}" y2="${y}" stroke="#e4e1da"/><text x="${p.l-9}" y="${y+4}" text-anchor="end" font-size="11" fill="#738096">${percent?Math.round(v)+"%":v.toFixed(1)}</text>`}).join("");
+ const axisLabel=v=>percent?fmtPct(v):pl(v);
+ const grid=[0,1,2,3,4].map(i=>{const v=min+(max-min)*i/4,y=Y(v);return `<line x1="${p.l}" y1="${y}" x2="${w-p.r}" y2="${y}" stroke="#e4e1da"/><text x="${p.l-9}" y="${y+4}" text-anchor="end" font-size="11" fill="#738096">${axisLabel(v)}</text>`}).join("");
  const paths=series.map(s=>{const valid=s.values.map((v,i)=>[v,i]).filter(([v])=>Number.isFinite(v));const d=valid.map(([v,i],j)=>`${j?"L":"M"}${X(i)},${Y(v)}`).join(" ");const dots=valid.map(([v,i])=>`<circle cx="${X(i)}" cy="${Y(v)}" r="5" fill="${s.color}" stroke="white" stroke-width="2"><title>${labels[i]}: ${pl(v)}${percent?"%":""}</title></circle>`).join("");return `<path d="${d}" fill="none" stroke="${s.color}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}`}).join("");
  const xs=labels.map((l,i)=>`<text x="${X(i)}" y="${h-14}" text-anchor="middle" font-size="12" fill="#647084">${esc(l)}</text>`).join("");
- return `<svg viewBox="0 0 ${w} ${h}" role="img">${grid}${paths}${xs}</svg><div class="legend">${series.map(s=>`<span><i class="dot" style="background:${s.color}"></i>${esc(s.name)}</span>`).join("")}</div>`;
+ return `<svg viewBox="0 0 ${w} ${h}" role="img">${grid}${paths}${xs}</svg><div class="legend">${series.map(s=>`<span><i class="dot" style="background:${s.color}"></i>${esc(s.name)}</span>`).join("")}${scaleNote?`<span class="pill">Oś Y: ${axisLabel(min)}–${axisLabel(max)}</span>`:""}</div>`;
 }
 function stackedSvg(labels,dist){
  const w=720,h=300,p={l:45,r:18,t:20,b:45},iw=w-p.l-p.r,ih=h-p.t-p.b,bw=Math.min(88,iw/(labels.length*1.7));
@@ -369,14 +390,14 @@ function connectedDotsSvg(labels,values,{min=55,max=90}={}){
  const w=920,h=340,p={l:50,r:32,t:52,b:86},iw=w-p.l-p.r,ih=h-p.t-p.b;
  const X=i=>p.l+(labels.length===1?iw/2:i*iw/(labels.length-1));
  const Y=v=>p.t+(max-v)*ih/(max-min);
- const grid=[60,70,80,90].map(v=>`<line x1="${p.l}" y1="${Y(v)}" x2="${w-p.r}" y2="${Y(v)}" stroke="#ebe7df"/><text x="${p.l-10}" y="${Y(v)+4}" text-anchor="end" font-size="12" fill="#738096">${v}%</text>`).join("");
+ const grid=[0,1,2,3,4].map(i=>{const v=min+(max-min)*i/4;return `<line x1="${p.l}" y1="${Y(v)}" x2="${w-p.r}" y2="${Y(v)}" stroke="#ebe7df"/><text x="${p.l-10}" y="${Y(v)+4}" text-anchor="end" font-size="12" fill="#738096">${fmtPct(v)}</text>`}).join("");
  const valid=values.map((v,i)=>[v,i]).filter(([v])=>Number.isFinite(v));
  const segments=valid.slice(1).map(([v,i],idx)=>{const [prev,pi]=valid[idx],avgVal=(prev+v)/2;return `<line x1="${X(pi)}" y1="${Y(prev)}" x2="${X(i)}" y2="${Y(v)}" stroke="${pctColor(avgVal)}" stroke-width="6" stroke-linecap="round"><title>${labels[pi]} → ${labels[i]}: ${pl(v-prev)} p.p.</title></line>`}).join("");
  const deltas=valid.slice(1).map(([v,i],idx)=>{const [prev,pi]=valid[idx],d=v-prev,mx=(X(pi)+X(i))/2,my=(Y(prev)+Y(v))/2;return `<g><rect x="${mx-32}" y="${my+12}" width="64" height="22" rx="11" fill="${d>=0?"rgba(46,139,104,.13)":"rgba(201,76,76,.13)"}"/><text x="${mx}" y="${my+27}" text-anchor="middle" font-size="12" font-weight="900" fill="${d>=0?COLORS.green:COLORS.red}">${d>=0?"+":""}${pl(d)} p.p.</text></g>`}).join("");
  const dots=valid.map(([v,i])=>`<g><circle cx="${X(i)}" cy="${Y(v)}" r="10" fill="${pctColor(v)}" stroke="#fff" stroke-width="3"><title>${labels[i]}: ${fmtPct(v)}</title></circle><text x="${X(i)}" y="${Y(v)-17}" text-anchor="middle" font-size="13" font-weight="900" fill="${pctColor(v)}">${fmtPct(v)}</text></g>`).join("");
  const xs=labels.map((l,i)=>`<text x="${X(i)}" y="${h-39}" text-anchor="middle" font-size="12" font-weight="800" fill="#647084">${esc(l)}</text>`).join("");
- const bands=`<rect x="${p.l}" y="${Y(90)}" width="${iw}" height="${Y(80)-Y(90)}" fill="rgba(46,139,104,.07)"/><rect x="${p.l}" y="${Y(80)}" width="${iw}" height="${Y(70)-Y(80)}" fill="rgba(43,103,209,.05)"/><rect x="${p.l}" y="${Y(70)}" width="${iw}" height="${Y(60)-Y(70)}" fill="rgba(201,76,76,.05)"/>`;
- return `<div class="connected-chart"><svg viewBox="0 0 ${w} ${h}" role="img">${bands}${grid}${segments}${deltas}${dots}${xs}<text x="${p.l}" y="${h-13}" font-size="12" fill="#647084">Kolor punktu/odcinka: niższa frekwencja = czerwony, wyższa = zielony. Etykiety między punktami pokazują zmianę p.p.</text></svg></div>`;
+ const bg=`<rect x="${p.l}" y="${p.t}" width="${iw}" height="${ih}" rx="12" fill="url(#attendanceBg)"/>`;
+ return `<div class="connected-chart"><svg viewBox="0 0 ${w} ${h}" role="img"><defs><linearGradient id="attendanceBg" x1="0" x2="0" y1="1" y2="0"><stop offset="0%" stop-color="rgba(201,76,76,.08)"/><stop offset="50%" stop-color="rgba(43,103,209,.045)"/><stop offset="100%" stop-color="rgba(46,139,104,.08)"/></linearGradient></defs>${bg}${grid}${segments}${deltas}${dots}${xs}<text x="${p.l}" y="${h-13}" font-size="12" fill="#647084">Kolor punktu/odcinka: niższa frekwencja = czerwony, wyższa = zielony. Oś Y: ${fmtPct(min)}–${fmtPct(max)}.</text></svg></div>`;
 }
 function activeView(){return document.querySelector(".view.active")?.id||"overview";}
 function setView(view,{scroll=true,write=true}={}){
@@ -440,7 +461,8 @@ function renderOverview(){
   metric(pl(fail[current])+"%","uczniów z oceną niedostateczną",`${pl(fail[current]-fail[current-1])} p.p. r/r`,fail[current]<=fail[current-1]?"up":"down"),
   metric(pl(byP[current].length),"rekordów uczniów 2025/26","klasyfikacja roczna")
  ].join("");
- document.getElementById("overallAverage").innerHTML=lineSvg(D.periodLabels,[{name:"średnia",values:avgs,color:COLORS.blue}],{min:2.7,max:3.5});
+ const overallAverageSeries=[{name:"średnia",values:avgs,color:COLORS.blue}];
+ document.getElementById("overallAverage").innerHTML=lineSvg(D.periodLabels,overallAverageSeries,fitScale(overallAverageSeries,{floor:1,ceil:6,minSpan:.35}));
  const dists=D.periodLabels.map((_,p)=>{const g=D.grades.filter(x=>x[0]===p).map(x=>x[5]);return [1,2,3,4,5,6].map(v=>pct(g.filter(x=>x===v).length,g.length)||0)});
  document.getElementById("overallGrades").innerHTML=stackedSvg(D.periodLabels,dists);
  const prof=new Map();D.records.filter(r=>r[1]===3&&Number.isFinite(r[6])).forEach(r=>{const label=profileLabel(r[4]);if(!prof.has(label))prof.set(label,[]);prof.get(label).push(r[6])});
@@ -515,7 +537,7 @@ function renderSubjectCategories(){
  const rows=subjectCategoryRows();
  const series=rows.map(r=>({name:r.short,values:r.periodRows.map(x=>x.avg),color:r.color}));
  const latestIndex=D.periodLabels.length-1;
- document.getElementById("subjectCategoryTrend").innerHTML=lineSvg(D.periodLabels,series,{min:1,max:6});
+ document.getElementById("subjectCategoryTrend").innerHTML=lineSvg(D.periodLabels,series,fitScale(series,{floor:1,ceil:6,minSpan:.7}));
  const kpis=rows.map(r=>{
   const first=r.periodRows.find(x=>Number.isFinite(x.avg));
   const last=[...r.periodRows].reverse().find(x=>Number.isFinite(x.avg));
@@ -544,7 +566,8 @@ function renderSubject(){
   metric(pl(pct(all.filter(x=>x>=4).length,all.length))+"%","ocen dobrych i wyższych")
  ].join("");
  document.getElementById("subjectLineSub").textContent=`${D.subjects[+subjectSelect.value][0]} · filtry aktywne dla wszystkich wykresów`;
- document.getElementById("subjectLine").innerHTML=lineSvg(D.periodLabels,[{name:"średnia",values:avgs,color:COLORS.blue}],{min:1,max:6});
+ const subjectSeries=[{name:"średnia",values:avgs,color:COLORS.blue}];
+ document.getElementById("subjectLine").innerHTML=lineSvg(D.periodLabels,subjectSeries,fitScale(subjectSeries,{floor:1,ceil:6,minSpan:.8}));
  const dist=byP.map(rs=>[1,2,3,4,5,6].map(g=>pct(rs.filter(r=>r[5]===g).length,rs.length)||0));
  document.getElementById("subjectDistribution").innerHTML=stackedSvg(D.periodLabels,dist);
  document.getElementById("subjectTable").innerHTML=tableHtml(["Rok","N","Średnia","1","2","3","4","5","6"],byP.map((rs,p)=>{const g=rs.map(r=>r[5]);return [D.periodLabels[p],g.length,pl(avg(g)),...[1,2,3,4,5,6].map(value=>{const count=g.filter(x=>x===value).length;return `${pl(pct(count,g.length))}% · ${count}`})]}));
@@ -567,7 +590,8 @@ function renderBehavior(){
  const dist=B.distribution.map(r=>[r[6],r[5],r[4],r[3],r[2],r[1]]);
  document.getElementById("behaviorDistribution").innerHTML=behaviorStackedSvg(labels,dist);
  const schoolSeries=B.bySchool.map((r,i)=>({name:r[0],values:r.slice(1),color:i===0?COLORS.blue:COLORS.gold}));
- document.getElementById("behaviorAverage").innerHTML=lineSvg(labels,[{name:"Cała szkoła",values:B.distribution.map(r=>r[7]),color:COLORS.green},...schoolSeries],{min:1,max:6});
+ const behaviorAverageSeries=[{name:"Cała szkoła",values:B.distribution.map(r=>r[7]),color:COLORS.green},...schoolSeries];
+ document.getElementById("behaviorAverage").innerHTML=lineSvg(labels,behaviorAverageSeries,fitScale(behaviorAverageSeries,{floor:1,ceil:6,minSpan:.6}));
  document.getElementById("behaviorLevelMatrix").innerHTML=`<div class="semester-matrix">${B.byLevel.map(r=>`<div class="semester-row" style="grid-template-columns:128px repeat(3,minmax(76px,1fr))"><div class="semester-label">${esc(r[0])}<br>klasa ${r[1]}</div>${r.slice(2).map((v,i)=>`<button class="semester-tile" type="button" style="background:${behaviorColor(v)}" title="${esc(r[0])}, klasa ${r[1]}, ${labels[i]}: ${pl(v)}"><strong>${pl(v)}</strong><small>${labels[i]}</small></button>`).join("")}</div>`).join("")}</div><div class="heat-caption">Skala: 1 naganne, 2 nieodpowiednie, 3 poprawne, 4 dobre, 5 bardzo dobre, 6 wzorowe.</div>`;
  const types=[...new Set(B.cohorts.map(r=>r[0]))];
  if(!types.includes(behaviorClassType))behaviorClassType=types[0]||"Technikum";
@@ -588,8 +612,10 @@ document.getElementById("attendanceCohortSelect").innerHTML=cohortOptions.map(([
 function renderCohort(){
  const rs=(cohortGroups.get(document.getElementById("cohortSelect").value)||[]).slice().sort((a,b)=>a[1]-b[1]),labels=rs.map(r=>D.classPeriodLabels[r[1]]+" · "+r[2]),a=rs.map(r=>r[6]),f=rs.map(r=>r[7]),n=rs.map(r=>r[8]),delta=a.at(-1)-a[0];
  document.getElementById("cohortKpis").innerHTML=[metric(pl(a.at(-1)),"ostatnia średnia",`${delta>=0?"+":""}${pl(delta)} od początku`,delta>=0?"up":"down"),metric(pl(f.at(-1))+"%","ostatnia frekwencja"),metric(pl(n.at(-1)),"ostatnia liczebność",`${n.at(-1)-n[0]>=0?"+":""}${n.at(-1)-n[0]} od początku`)].join("");
- document.getElementById("cohortAverage").innerHTML=lineSvg(labels,[{name:"średnia",values:a,color:COLORS.blue}],{min:2.3,max:4.8});
- document.getElementById("cohortAttendance").innerHTML=lineSvg(labels,[{name:"frekwencja",values:f,color:COLORS.cyan}],{min:40,max:100,percent:true})+`<div class="legend"><span class="pill">Liczebność: ${n.join(" → ")}</span></div>`;
+ const cohortAverageSeries=[{name:"średnia",values:a,color:COLORS.blue}];
+ const cohortAttendanceSeries=[{name:"frekwencja",values:f,color:COLORS.cyan}];
+ document.getElementById("cohortAverage").innerHTML=lineSvg(labels,cohortAverageSeries,fitScale(cohortAverageSeries,{floor:1,ceil:6,minSpan:.8}));
+ document.getElementById("cohortAttendance").innerHTML=lineSvg(labels,cohortAttendanceSeries,fitScale(cohortAttendanceSeries,{floor:0,ceil:100,minSpan:12,percent:true}))+`<div class="legend"><span class="pill">Liczebność: ${n.join(" → ")}</span></div>`;
  document.getElementById("cohortTable").innerHTML=tableHtml(["Okres","Oddział","Poziom","Średnia","Frekwencja","Uczniów"],rs.map(r=>[D.classPeriodLabels[r[1]],r[2],r[5],pl(r[6]),pl(r[7])+"%",r[8]]));
 }
 document.getElementById("cohortSelect").addEventListener("change",()=>{renderCohort();writeUrlState();});
@@ -607,7 +633,7 @@ function renderAttendancePath(A){
  document.getElementById("attendancePath").innerHTML=`
   <div class="segmented">${types.map(t=>`<button class="seg-btn ${t===attendancePathType?"active":""}" type="button" data-path-type="${esc(t)}">${esc(t)}</button>`).join("")}</div>
   <div class="segmented">${levels.map(l=>`<button class="seg-btn ${l===attendancePathLevel?"active":""}" type="button" data-path-level="${l}">klasa ${l}</button>`).join("")}</div>
-  ${row?connectedDotsSvg(labels,vals,{min:55,max:90}):`<div class="empty">Brak danych dla wybranej ścieżki.</div>`}`;
+  ${row?connectedDotsSvg(labels,vals,fitScale([{name:"frekwencja",values:vals,color:COLORS.cyan}],{floor:0,ceil:100,minSpan:12,percent:true})):`<div class="empty">Brak danych dla wybranej ścieżki.</div>`}`;
  document.querySelectorAll("[data-path-type]").forEach(btn=>btn.addEventListener("click",()=>{attendancePathType=btn.dataset.pathType;renderAttendance();}));
  document.querySelectorAll("[data-path-level]").forEach(btn=>btn.addEventListener("click",()=>{attendancePathLevel=+btn.dataset.pathLevel;renderAttendance();}));
 }
@@ -679,8 +705,10 @@ function renderAttendance(){
  renderAttendancePath(A);
  renderBenchmarkExplorer(A);
  renderSemesterHeatmap(A);
- document.getElementById("attendanceSchoolTrend").innerHTML=lineSvg(years,[{name:"I półrocze",values:school.map(r=>r[1]),color:COLORS.blue},{name:"II półrocze",values:school.map(r=>r[2]),color:COLORS.red},{name:"roczna",values:school.map(r=>r[3]),color:COLORS.cyan}],{min:60,max:85,percent:true});
- document.getElementById("attendanceFirstClasses").innerHTML=lineSvg(A.firstClasses.map(r=>r[0].replace("20","").replace("/20","/")),[{name:"I półrocze",values:A.firstClasses.map(r=>r[1]),color:COLORS.blue},{name:"II półrocze",values:A.firstClasses.map(r=>r[2]),color:COLORS.red},{name:"roczna",values:A.firstClasses.map(r=>r[3]),color:COLORS.cyan}],{min:60,max:85,percent:true})+`<div class="legend">${A.firstClasses.map(r=>`<span class="pill">${esc(r[0])}: ${esc(r[4])}</span>`).join("")}</div>`;
+ const attendanceSchoolSeries=[{name:"I półrocze",values:school.map(r=>r[1]),color:COLORS.blue},{name:"II półrocze",values:school.map(r=>r[2]),color:COLORS.red},{name:"roczna",values:school.map(r=>r[3]),color:COLORS.cyan}];
+ const attendanceFirstSeries=[{name:"I półrocze",values:A.firstClasses.map(r=>r[1]),color:COLORS.blue},{name:"II półrocze",values:A.firstClasses.map(r=>r[2]),color:COLORS.red},{name:"roczna",values:A.firstClasses.map(r=>r[3]),color:COLORS.cyan}];
+ document.getElementById("attendanceSchoolTrend").innerHTML=lineSvg(years,attendanceSchoolSeries,fitScale(attendanceSchoolSeries,{floor:0,ceil:100,minSpan:8,percent:true}));
+ document.getElementById("attendanceFirstClasses").innerHTML=lineSvg(A.firstClasses.map(r=>r[0].replace("20","").replace("/20","/")),attendanceFirstSeries,fitScale(attendanceFirstSeries,{floor:0,ceil:100,minSpan:8,percent:true}))+`<div class="legend">${A.firstClasses.map(r=>`<span class="pill">${esc(r[0])}: ${esc(r[4])}</span>`).join("")}</div>`;
  document.getElementById("attendanceLevelTable").innerHTML=tableHtml(["Typ szkoły","Poziom","2023/24","2024/25","2025/26","zmiana 23/24→25/26"],A.levelBenchmarks.map(r=>[r[0],r[1],fmtPct(r[2]),fmtPct(r[3]),fmtPct(r[4]),`${pl(r[4]-r[2])} p.p.`]));
  document.getElementById("attendanceSemesterTable").innerHTML=tableHtml(["Grupa","I półrocze","II półrocze","Roczna","spadek I→II"],A.semesterYear2025.map(r=>[r[0],fmtPct(r[1]),fmtPct(r[2]),fmtPct(r[3]),`${pl(r[1]-r[2])} p.p.`]));
  document.getElementById("attendanceLevelSemesterTable").innerHTML=tableHtml(["Typ szkoły","Poziom","I 23/24","II 23/24","I 24/25","II 24/25","I 25/26","II 25/26"],A.levelSemester.map(r=>[r[0],r[1],...r.slice(2).map(fmtPct)]));
@@ -705,7 +733,8 @@ function renderAttendanceCohort(){
   metric(pl(n.at(-1)),"ostatnia liczebność",`${n.at(-1)-n[0]>=0?"+":""}${n.at(-1)-n[0]} od początku`),
   metric(pl(rs.length),"okresów w historii","dostępnych dla rocznika")
  ].join("");
- document.getElementById("attendanceCohortTrend").innerHTML=lineSvg(labels,[{name:"frekwencja",values:f,color:COLORS.cyan}],{min:40,max:100,percent:true})+`<div class="legend"><span class="pill">Liczebność: ${n.join(" → ")}</span></div>`;
+ const attendanceCohortSeries=[{name:"frekwencja",values:f,color:COLORS.cyan}];
+ document.getElementById("attendanceCohortTrend").innerHTML=lineSvg(labels,attendanceCohortSeries,fitScale(attendanceCohortSeries,{floor:0,ceil:100,minSpan:12,percent:true}))+`<div class="legend"><span class="pill">Liczebność: ${n.join(" → ")}</span></div>`;
  document.getElementById("attendanceCohortTable").innerHTML=tableHtml(["Okres","Oddział","Typ","Poziom","Frekwencja","Uczniów"],rs.map(r=>[D.classPeriodLabels[r[1]],r[2],educationLabel(r[9]),r[5],fmtPct(r[7]),r[8]]));
 }
 document.getElementById("attendanceCohortSelect").addEventListener("change",()=>{renderAttendanceCohort();writeUrlState();});
